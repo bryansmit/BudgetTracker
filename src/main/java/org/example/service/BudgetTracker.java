@@ -10,29 +10,19 @@ import java.util.Optional;
 
 public class BudgetTracker {
 
-    private static BudgetTracker instance = null;
-
     private final ArrayList<Transaction> transactions;
 
     private BudgetTracker() {
         this.transactions = new ArrayList<>();
     }
 
-    public static BudgetTracker getInstance() {
-        if (instance == null) {
-            instance = new BudgetTracker();
-        }
-
-        return instance;
-    }
-
-    public void run() {
-        IO.println("What would you like to do?");
-
-        askForAction();
+    public static void run() {
+        new BudgetTracker().askForAction();
     }
 
     private void askForAction() {
+        IO.println("What would you like to do?");
+
         for (Action action : Action.values()) {
             IO.println(String.format("[%d] %s", action.getIdentifier(), action.getDescription()));
         }
@@ -67,7 +57,7 @@ public class BudgetTracker {
 
         IO.println(String.format("Your balance is: %s", NumberFormat.getCurrencyInstance().format(income - expenses)));
 
-        this.run();
+        this.askForAction();
     }
 
     private void listAllTransactions() {
@@ -75,7 +65,7 @@ public class BudgetTracker {
                 transaction -> IO.println(String.format("%s: %s", transaction.type().getDescription(), NumberFormat.getCurrencyInstance().format(transaction.amount())))
         );
 
-        this.run();
+        this.askForAction();
     }
 
     private void askForTransactionType() {
@@ -101,7 +91,7 @@ public class BudgetTracker {
 
             IO.println(String.format("Succesfully added a new transaction (%s): %s", transactionType.getDescription().toLowerCase(), NumberFormat.getCurrencyInstance().format(amount)));
 
-            this.run();
+            this.askForAction();
 
             return;
         }
